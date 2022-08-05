@@ -24,7 +24,7 @@ public class Customer {
     private String identityNumber;
     private String digitalAddress;
     private String email;
-    private Integer phonenumber;
+    private String phonenumber;
     private String imageUrl;
     private String password;
 

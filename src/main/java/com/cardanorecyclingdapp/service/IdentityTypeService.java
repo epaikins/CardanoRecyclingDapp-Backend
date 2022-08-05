@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface IdentityTypeService {
-    public IdentityType saveIdentityType(IdentityType identityType);
+    IdentityType saveIdentityType(IdentityType identityType);
     IdentityType getIdentityType(Long id);
     Page<IdentityType> getIdentityTypes(boolean isActive, int page, int size);
     List<IdentityType> getIdentityTypes(Boolean isActive);

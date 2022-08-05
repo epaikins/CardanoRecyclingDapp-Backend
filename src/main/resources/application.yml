@@ -19,3 +19,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
+# Amazon Credentials
+accessKey: AKIAVXHG4IACNECFGXV4
+secret: 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
+bucketName: cardanorecycledapps3bucket
+region: us-east-1
