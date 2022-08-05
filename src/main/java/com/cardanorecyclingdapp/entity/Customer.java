@@ -13,19 +13,19 @@ import javax.persistence.*;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
-    public String name;
+    private Long id;
+    private String name;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "identitytype_id", referencedColumnName = "id")
-    public IdentityType identityType;
+    private IdentityType identityType;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customertype_id", referencedColumnName = "id")
-    public CustomerType customerType;
-    public String identityNumber;
-    public String digitalAddress;
-    public String email;
-    public Integer phonenumber;
-    public String imageUrl;
-    public String password;
+    private CustomerType customerType;
+    private String identityNumber;
+    private String digitalAddress;
+    private String email;
+    private Integer phonenumber;
+    private String imageUrl;
+    private String password;
 
 }

@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class CustomerType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
-    public String name;
-    public Boolean isActive;
+    private Long id;
+    private String name;
+    private Boolean isActive = true;
 }

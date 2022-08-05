@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface CustomerTypeService {
-    public CustomerType saveCustomerType(String name);
-    CustomerType getCustomerType(String name);
-    Page<CustomerType> getCustomerTypes(String name, int page, int size);
+    public CustomerType saveCustomerType(CustomerType customerType);
+    CustomerType getCustomerType(Long id);
+    Page<CustomerType> getCustomerTypes(boolean isActive, int page, int size);
     List<CustomerType> getCustomerTypes(Boolean isActive);
-    CustomerType editCustomerType(String name, CustomerType customerType);
+    CustomerType editCustomerType(Long id, CustomerType customerType) ;
 }
