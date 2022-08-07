@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface CustomerService {
-    Map<Object, Object> saveCustomer(MultipartFile file, CustomerDAO customerDAO);
+    Map<Object, Object> saveCustomer(MultipartFile file, String json);
+    Map<String, Object> signinCustomer(String email, String password);
     Customer getCustomer(Long id);
     Page<Customer> getCustomers(boolean isActive, int page, int size);
     List<Customer> getCustomers(Boolean isActive);

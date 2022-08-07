@@ -1,5 +1,6 @@
 package com.cardanorecyclingdapp.security;
 
+import com.cardanorecyclingdapp.filter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import static com.cardanorecyclingdapp.security.CustomDsl.customDsl;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
@@ -51,8 +53,8 @@ public class WebSecurityConfig{
 //        http.authorizeRequests().antMatchers(POST, "/**").hasAnyAuthority("Admin");
         http.authorizeRequests().anyRequest().permitAll();
 //        http.authorizeRequests().anyRequest().authenticated();
-//        http.apply(customDsl());
-//        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.apply(customDsl());
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
