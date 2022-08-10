@@ -52,11 +52,12 @@ public class WebSecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers(POST,"/customer","/auth/**","/swagger-ui/**","/auth/signin").permitAll();
-        http.authorizeRequests().antMatchers(GET, "/**").hasAnyAuthority("User");
-        http.authorizeRequests().antMatchers(POST, "/**").hasAnyAuthority("User");
-//        http.authorizeRequests().anyRequest().permitAll();
-        http.authorizeRequests().anyRequest().authenticated();
+//        http.authorizeRequests().antMatchers(GET,"/customer","/auth/**","/swagger-ui/**","/auth/signin").permitAll();
+//        http.authorizeRequests().antMatchers(POST,"/customer","/auth/**","/swagger-ui/**","/auth/signin").permitAll();
+//        http.authorizeRequests().antMatchers(GET, "/**").hasAnyAuthority("User");
+//        http.authorizeRequests().antMatchers(POST, "/**").hasAnyAuthority("User");
+        http.authorizeRequests().anyRequest().permitAll();
+//        http.authorizeRequests().anyRequest().authenticated();
         http.apply(customDsl());
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -1,10 +1,16 @@
 package com.cardanorecyclingdapp.controller;
 
+import com.cardanorecyclingdapp.entity.Customer;
 import com.cardanorecyclingdapp.model.HttpResponseWithObject;
 import com.cardanorecyclingdapp.model.Login;
 import com.cardanorecyclingdapp.service.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +30,18 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    @Operation(
+            tags = {"Account"},
+            summary = "This is signup for a new customer",
+            description = "This is the description",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "This is the request body description",
+                    content = @Content(schema = @Schema(implementation = Customer.class))),
+            responses = {@ApiResponse(
+                    responseCode = "200",
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)
+            )}
+    )
     @PostMapping("/customer")
     public ResponseEntity<HttpResponseWithObject> saveCustomer(@RequestParam("file") MultipartFile file, @RequestParam("data") String json) throws IOException {
         Map<Object,Object> data = customerService.saveCustomer(file, json);
@@ -45,6 +63,18 @@ public class CustomerController {
                         .build());
     }
 
+    @Operation(
+            tags = {"Account"},
+            summary = "This is login for a customer",
+            description = "This is the description",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "This is the request body description",
+                    content = @Content(schema = @Schema(implementation = Login.class))),
+            responses = {@ApiResponse(
+                    responseCode = "200",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
+            )}
+    )
     @PostMapping("/auth/signin")
     public ResponseEntity<HttpResponseWithObject> signinUser(@RequestBody Login loginCustomer) {
         Map<Object, Object> response = customerService.signinCustomer(loginCustomer.getEmail(), loginCustomer.getPassword());
