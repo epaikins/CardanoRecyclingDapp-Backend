@@ -19,7 +19,7 @@ public class CustomerTypeController {
     private final CustomerTypeService customerTypeService;
 
     @PostMapping("/customerType")
-    public ResponseEntity<HttpResponseWithObject> saveCallType(@RequestBody CustomerType customerType){
+    public ResponseEntity<HttpResponseWithObject> saveCustomerType(@RequestBody CustomerType customerType){
         CustomerType new_customerType = customerTypeService.saveCustomerType(customerType);
         return ResponseEntity.ok().body(
                 HttpResponseWithObject.builder()
@@ -33,7 +33,7 @@ public class CustomerTypeController {
     }
 
     @GetMapping("/customerType/pages")
-    public ResponseEntity<HttpResponseWithObject> getClaimTypes(@RequestParam Optional<Boolean> isActive,
+    public ResponseEntity<HttpResponseWithObject> getCustomerTypes(@RequestParam Optional<Boolean> isActive,
                                                       @RequestParam Optional<Integer>  page,
                                                       @RequestParam Optional<Integer> size){
         return ResponseEntity.ok().body(
@@ -51,7 +51,7 @@ public class CustomerTypeController {
     }
 
     @GetMapping("/field/customerType")
-    public ResponseEntity<HttpResponseWithObject> getClaimTypes(@RequestParam(name="isActive") Boolean isActive) {
+    public ResponseEntity<HttpResponseWithObject> getCustomerTypes(@RequestParam(name="isActive") Boolean isActive) {
         return ResponseEntity.ok().body(
                 HttpResponseWithObject.builder()
                         .timestamp(LocalDateTime.now().toString())
@@ -64,7 +64,7 @@ public class CustomerTypeController {
     }
 
     @GetMapping("/customerType")
-    public ResponseEntity<HttpResponseWithObject> getClaimType(@RequestParam(name="id") Long id){
+    public ResponseEntity<HttpResponseWithObject> getCustomerType(@RequestParam(name="id") Long id){
         return ResponseEntity.ok().body(
                 HttpResponseWithObject.builder()
                         .timestamp(LocalDateTime.now().toString())
@@ -78,7 +78,7 @@ public class CustomerTypeController {
     }
 
     @PutMapping("/customerType")
-    public ResponseEntity<HttpResponseWithObject> editClaimType(@RequestParam(name="id") Long id, @RequestBody CustomerType customerType){
+    public ResponseEntity<HttpResponseWithObject> editCustomerType(@RequestParam(name="id") Long id, @RequestBody CustomerType customerType){
         return ResponseEntity.ok().body(
                 HttpResponseWithObject.builder()
                         .timestamp(LocalDateTime.now().toString())

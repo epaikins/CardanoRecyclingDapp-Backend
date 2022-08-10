@@ -8,6 +8,7 @@ import com.cardanorecyclingdapp.entity.Customer;
 import com.cardanorecyclingdapp.repository.CustomerRepo;
 import com.cardanorecyclingdapp.repository.CustomerTypeRepo;
 import com.cardanorecyclingdapp.repository.IdentityTypeRepo;
+import com.cardanorecyclingdapp.repository.RoleRepo;
 import com.cardanorecyclingdapp.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -33,15 +37,15 @@ import java.util.stream.Collectors;
 
 import static com.cardanorecyclingdapp.utils.ResponseUtils.send;
 
-@RequiredArgsConstructor
 @Transactional
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl implements CustomerService, UserDetailsService {
     @Value("${bucketName}")
     private String bucketName;
 
     private final AmazonS3 s3;
     private final CustomerRepo customerRepo;
+    private final RoleRepo roleRepo;
     private final IdentityTypeRepo identityTypeRepo;
     private final CustomerTypeRepo customerTypeRepo;
     private final ObjectMapper objectMapper;
@@ -49,6 +53,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final AuthenticationManager authenticationManager;
 
+    @Autowired
+    public CustomerServiceImpl(ObjectMapper objectMapper, CustomerRepo customerRepo,CustomerTypeRepo customerTypeRepo,IdentityTypeRepo identityTypeRepo, AmazonS3 s3, RoleRepo roleRepo, PasswordEncoder passwordEncoder, @Lazy AuthenticationManager authenticationManager) {
+        this.customerRepo = customerRepo;
+        this.roleRepo = roleRepo;
+        this.s3 = s3;
+        this.objectMapper = objectMapper;
+        this.customerTypeRepo = customerTypeRepo;
+        this.identityTypeRepo = identityTypeRepo;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
     public Map<Object, Object> saveCustomer(MultipartFile file, String json){
@@ -80,7 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setDigitalAddress(customerDAO.getDigitalAddress());
                 customer.setIdentityType(identityTypeRepo.findById(customerDAO.getIdentityTypeId()).orElse(null));
                 customer.setCustomerType(customerTypeRepo.findById(customerDAO.getCustomerTypeId()).orElse(null));
-
+                customer.getRoles().add(roleRepo.findById(1L).orElse(null));
             }
             catch (Exception e){
                 throw new RuntimeException(e);
@@ -91,22 +106,29 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Map<String, Object> signinCustomer(String email, String password) {
+    public Map<Object, Object> signinCustomer(String email, String password) {
         Customer customUser = customerRepo.findByEmail(email);
         if(customUser != null) {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-            Algorithm algorithm = Algorithm.HMAC256("upt".getBytes());
-            Integer EXPIRE_TIME = 10 * 60 * 1000;
-            String access_token = JWT.create()
-                    .withSubject(email)
-                    .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME))
-                    .withIssuer("org.cardanorecyclingdapp")
-                    .sign(algorithm);
-            Map<String, Object> tokens = new HashMap<>();
-            tokens.put("access_token", access_token);
-            tokens.put("customer", customUser);
-            return tokens;
+            try{
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
+                Authentication authentication = authenticationManager.authenticate(token);
+                org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+                Algorithm algorithm = Algorithm.HMAC256("upt".getBytes());
+                Integer EXPIRE_TIME = 10 * 60 * 1000;
+                String access_token = JWT.create()
+                        .withSubject(email)
+                        .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME))
+                        .withIssuer("org.cardanorecyclingdapp")
+                        .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                        .sign(algorithm);
+                Map<Object, Object> tokens = new HashMap<>();
+                tokens.put("access_token", access_token);
+                tokens.put("customer", customUser);
+                return tokens;
+            }
+            catch (Exception e) {
+                return send(false, e.toString());
+            }
         }
         return null;
     }
@@ -141,5 +163,18 @@ public class CustomerServiceImpl implements CustomerService {
 
     private String getUsernameFromEmail(String email){
         return email.split("@")[0];
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Customer user = customerRepo.findByEmail(username);
+        if(user ==null){
+            throw new UsernameNotFoundException("User Not Found in the Database");
+        }
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 }

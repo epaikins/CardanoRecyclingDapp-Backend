@@ -47,7 +47,7 @@ public class CustomerController {
 
     @PostMapping("/auth/signin")
     public ResponseEntity<HttpResponseWithObject> signinUser(@RequestBody Login loginCustomer) {
-        Map<String, Object> response = customerService.signinCustomer(loginCustomer.getEmail(), loginCustomer.getPassword());
+        Map<Object, Object> response = customerService.signinCustomer(loginCustomer.getEmail(), loginCustomer.getPassword());
         if (response != null) {
             return ResponseEntity.ok().body(
                     HttpResponseWithObject.builder()

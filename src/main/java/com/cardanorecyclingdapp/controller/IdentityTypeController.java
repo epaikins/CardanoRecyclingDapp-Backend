@@ -18,7 +18,7 @@ public class IdentityTypeController {
     private final IdentityTypeService identityTypeService;
 
     @PostMapping("/identityType")
-    public ResponseEntity<HttpResponseWithObject> saveCallType(@RequestBody IdentityType identityType){
+    public ResponseEntity<HttpResponseWithObject> saveIdentityType(@RequestBody IdentityType identityType){
         IdentityType new_identityType = identityTypeService.saveIdentityType(identityType);
         return ResponseEntity.ok().body(
                 HttpResponseWithObject.builder()
@@ -32,7 +32,7 @@ public class IdentityTypeController {
     }
 
     @GetMapping("/identityType/pages")
-    public ResponseEntity<HttpResponseWithObject> getClaimTypes(@RequestParam Optional<Boolean> isActive,
+    public ResponseEntity<HttpResponseWithObject> getIdentityTypes(@RequestParam Optional<Boolean> isActive,
                                                                 @RequestParam Optional<Integer>  page,
                                                                 @RequestParam Optional<Integer> size){
         return ResponseEntity.ok().body(
@@ -50,7 +50,7 @@ public class IdentityTypeController {
     }
 
     @GetMapping("/field/identityType")
-    public ResponseEntity<HttpResponseWithObject> getClaimTypes(@RequestParam(name="isActive") Boolean isActive) {
+    public ResponseEntity<HttpResponseWithObject> getIdentityTypes(@RequestParam(name="isActive") Boolean isActive) {
         return ResponseEntity.ok().body(
                 HttpResponseWithObject.builder()
                         .timestamp(LocalDateTime.now().toString())
@@ -63,7 +63,7 @@ public class IdentityTypeController {
     }
 
     @GetMapping("/identityType")
-    public ResponseEntity<HttpResponseWithObject> getClaimType(@RequestParam(name="id") Long id){
+    public ResponseEntity<HttpResponseWithObject> getIdentityType(@RequestParam(name="id") Long id){
         return ResponseEntity.ok().body(
                 HttpResponseWithObject.builder()
                         .timestamp(LocalDateTime.now().toString())
@@ -77,7 +77,7 @@ public class IdentityTypeController {
     }
 
     @PutMapping("/identityType")
-    public ResponseEntity<HttpResponseWithObject> editClaimType(@RequestParam(name="id") Long id, @RequestBody IdentityType identityType){
+    public ResponseEntity<HttpResponseWithObject> editIdentityType(@RequestParam(name="id") Long id, @RequestBody IdentityType identityType){
         return ResponseEntity.ok().body(
                 HttpResponseWithObject.builder()
                         .timestamp(LocalDateTime.now().toString())

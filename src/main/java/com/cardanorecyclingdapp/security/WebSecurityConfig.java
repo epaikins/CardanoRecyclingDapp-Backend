@@ -1,6 +1,7 @@
 package com.cardanorecyclingdapp.security;
 
 import com.cardanorecyclingdapp.filter.CustomAuthorizationFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,11 @@ public class WebSecurityConfig{
     }
 
     @Bean
+    public ObjectMapper objectMapper(){
+        return new ObjectMapper();
+    }
+
+    @Bean
     public WebMvcConfigurer configureCors(){
         return new WebMvcConfigurer() {
             @Override
@@ -46,11 +52,9 @@ public class WebSecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        http.authorizeRequests().antMatchers(POST, "/user","/role","/role/user","/auth/**","/swagger-ui/**","/auth/signin").permitAll();
-//        http.authorizeRequests().antMatchers(GET, "/field/**","/user","/swagger-ui/**", "/v3/api-docs/**","/tickets").permitAll();
-//        http.authorizeRequests().antMatchers(GET, "/**").hasAnyAuthority("User");
-//        http.authorizeRequests().antMatchers(GET, "/**").hasAnyAuthority("Admin");
-//        http.authorizeRequests().antMatchers(POST, "/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(POST,"/customer","/auth/**","/swagger-ui/**","/auth/signin").permitAll();
+        http.authorizeRequests().antMatchers(GET, "/**").hasAnyAuthority("User");
+        http.authorizeRequests().antMatchers(POST, "/**").hasAnyAuthority("User");
         http.authorizeRequests().anyRequest().permitAll();
 //        http.authorizeRequests().anyRequest().authenticated();
         http.apply(customDsl());
