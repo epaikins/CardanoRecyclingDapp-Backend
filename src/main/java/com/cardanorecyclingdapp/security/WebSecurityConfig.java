@@ -55,8 +55,8 @@ public class WebSecurityConfig{
         http.authorizeRequests().antMatchers(POST,"/customer","/auth/**","/swagger-ui/**","/auth/signin").permitAll();
         http.authorizeRequests().antMatchers(GET, "/**").hasAnyAuthority("User");
         http.authorizeRequests().antMatchers(POST, "/**").hasAnyAuthority("User");
-        http.authorizeRequests().anyRequest().permitAll();
-//        http.authorizeRequests().anyRequest().authenticated();
+//        http.authorizeRequests().anyRequest().permitAll();
+        http.authorizeRequests().anyRequest().authenticated();
         http.apply(customDsl());
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

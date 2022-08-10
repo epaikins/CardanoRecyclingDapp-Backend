@@ -1,4 +1,4 @@
-#aws_database_url: mysql-database-server.csyk75ifilol.us-east-1.rds.amazonaws.com:3306
+aws_database_url: mysql-database-server.csyk75ifilol.us-east-1.rds.amazonaws.com:3306
 local_database_url: localhost:3306
 
 server:
@@ -20,7 +20,7 @@ spring:
         format_sql: true
 
 # Amazon Credentials
-accessKey: AKIAVXHG4IACNECFGXV4
-secret: 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
-bucketName: cardanorecycledapps3bucket
-region: us-east-1
+accessKey: AKIASU6ECBRWJBUGB6YB
+secret: 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
+bucketName: elasticbeanstalk-eu-west-2-182410415212
+region: eu-west-2

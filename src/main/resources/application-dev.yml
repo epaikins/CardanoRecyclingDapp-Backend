@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${aws_database_url}/testprojectdb
+    username: admin
+    password: unitedpensions
+  jpa:
+    hibernate:
+      ddl-auto: create
