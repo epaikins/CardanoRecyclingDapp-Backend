@@ -22,5 +22,5 @@ spring:
 # Amazon Credentials
 accessKey: AKIASU6ECBRWJBUGB6YB
 secret: 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
-bucketName: elasticbeanstalk-eu-west-2-182410415212
-region: eu-west-2
+bucketName: elasticbeanstalk-us-east-1-182410415212
+region: us-east-1

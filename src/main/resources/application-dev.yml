@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://${aws_database_url}/testprojectdb
+    url: jdbc:mysql://${aws_database_url}/dev-cardanorecyclingdappdb
     username: admin
     password: unitedpensions
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
